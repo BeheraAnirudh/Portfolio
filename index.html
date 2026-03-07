@@ -46,6 +46,32 @@
   font-size: 14px;
   box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
 }
+    .experience-container{
+  margin-left: 30px;
+}
+
+.experience-card{
+  background: white;
+  border-left: 5px solid #004080;
+  padding: 15px 20px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+
+.experience-card strong{
+  font-size: 16px;
+  color:#004080;
+}
+
+.experience-card ul{
+  margin-top:8px;
+  padding-left:20px;
+}
+
+.experience-card li{
+  margin-bottom:6px;
+}
   </style>
 </head>
 <body>
@@ -85,7 +111,7 @@
     <div class="skill-box">Perl</div>
     <div class="skill-box">TCL</div>
     <div class="skill-box">Bash</div>
-    <div class="skill-box">Python (Basic)</div>
+    <div class="skill-box">Python </div>
     <div class="skill-box">Verilog HDL</div>
     <div class="skill-box">Makefile</div>
   </div>
@@ -100,7 +126,12 @@
     <div class="skill-box">Cadence Virtuoso</div>
     <div class="skill-box">Encounter</div>
     <div class="skill-box">Calibre</div>
-    <div class="skill-box">Vivado</div>
+    <div class="skill-box">Cacti</div>
+    <div class="skill-box">Watch</div>
+    <div class="skill-box">Hspice</div>
+    <div class="skill-box">Calibre</div>
+    <div class="skill-box">Xiling Vivado</div>
+    <div class="skill-box">ModelSim</div>
   </div>
 
   <h3>Physical Design & FPGA</h3>
@@ -123,50 +154,54 @@
   </div>
 </div>
 
-  <div class="section">
-    <h2>Experience</h2>
-    <ul>
-            <li>
-        <strong>Physical Design Engineer – Industry Experience</strong>  
-           <ul>
-        <li>Executed PnR for advanced AI accelerator blocks (~2M standard cells, multiple macros), achieving PPA targets across multi-corner, multi-mode analysis.<li> 
-        <li>Designed multi-VDD architectures, achieved timing closure across SS/TT/FF corners.<li>  
-        <li>Conducted block-level floorplanning, pin assignment, IP integration, and custom layout coordination.<li>  
-        <li>Performed STA & parasitic extraction, mitigated IR-drop, crosstalk, and reliability issues. <li> 
-        <li>Optimized CTS and implemented ECO flows for late-stage timing fixes.<li>
-           <ul>
-      </li>
-      <li>
-  <strong>Research Assistant – FPGA-based Audio System Project</strong>
-  <ul>
-    <li>Designed and implemented two FPGA-based audio system architectures: a baseline FIR filtering system and an advanced DSP pipeline integrating FFT processing, LMS adaptive noise cancellation, and multi-band parametric equalization.</li>
-    <li>Implemented the system on a ZedBoard Zynq SoC platform using Vivado, validating latency, signal-to-noise ratio (SNR), sound pressure level (SPL), and FPGA resource utilization.</li>
-    <li>Developed a hybrid ARM–FPGA hardware–software co-design pipeline enabling deterministic and low-latency real-time audio processing.</li>
-    <li>Performed system-level verification and optimization to ensure efficient FPGA resource utilization and stable real-time performance.</li>
-  </ul>
-</li>
+ <div class="section">
+<h2>Experience</h2>
 
-<li>
-  <strong>Research Assistant – Physical Design Methodology Research</strong>
-  <ul>
-    <li>Conducted extensive RTL-to-GDSII implementation experiments using industry-standard Synopsys and Cadence tool flows for advanced technology nodes.</li>
-    <li>Developed and evaluated a customized floorplanning and power distribution network (PDN) methodology to improve IR-drop resilience and reduce post-powerplan routing conflicts.</li>
-    <li>Designed TCL-based automation scripts to optimize critical steps of the physical design flow, reducing runtime while improving quality-of-results (QoR).</li>
-    <li>Analyzed multi-corner multi-mode (MCMM) timing scenarios and explored methodology improvements for scalable ASIC design implementation.</li>
-  </ul>
-</li>
-      <li>
-        <strong>Physical Design Apprentice – Industry/Training Experience</strong>  
-        <ul>
-        <li>Executed end-to-end physical design flow (Synthesis → Floorplan → Placement → CTS → Routing → Optimization) for advanced nodes.<li>  
-        <li>Resolved setup/hold violations, achieved timing closure for large designs. <li> 
-        <li>Delivered clean GDSII, automated ECO cycles via TCL & Shell scripting.  <li>
-        <li>Gained hands-on experience in I/O planning, bump assignment, and methodology fine-tuning.<li>
-         <ul>
-      </li>
-    </ul>
-  </div>
+<div class="experience-container">
 
+<div class="experience-card">
+<strong>Physical Design Engineer – Industry Experience</strong>
+<ul>
+<li>Executed place-and-route for advanced AI accelerator blocks (~2M standard cells, multiple macros), achieving PPA targets across multi-corner multi-mode analysis.</li>
+<li>Designed multi-VDD architectures and achieved timing closure across SS, TT, and FF process corners.</li>
+<li>Performed block-level floorplanning, pin assignment, IP integration, and layout coordination.</li>
+<li>Conducted static timing analysis and parasitic extraction while mitigating IR-drop, crosstalk, and reliability challenges.</li>
+<li>Optimized clock tree synthesis and implemented ECO flows for late-stage timing closure.</li>
+</ul>
+</div>
+
+<div class="experience-card">
+<strong>Research Assistant – FPGA-based Audio System Project</strong>
+<ul>
+<li>Designed and implemented FPGA-based audio system architectures including FIR filtering and advanced DSP pipelines.</li>
+<li>Implemented the system on a Zynq SoC FPGA platform using Vivado and validated latency, SNR, SPL, and FPGA resource utilization.</li>
+<li>Developed a hybrid ARM–FPGA co-design pipeline enabling deterministic low-latency audio processing.</li>
+<li>Performed system-level verification and optimization for efficient hardware utilization and stable real-time performance.</li>
+</ul>
+</div>
+
+<div class="experience-card">
+<strong>Research Assistant – Physical Design Methodology Research</strong>
+<ul>
+<li>Conducted RTL-to-GDSII implementation experiments using industry-standard Synopsys and Cadence tool flows.</li>
+<li>Developed customized floorplanning and PDN methodologies to improve IR-drop resilience and routing efficiency.</li>
+<li>Designed TCL automation scripts to optimize physical design stages and reduce runtime while improving QoR.</li>
+<li>Analyzed multi-corner multi-mode timing scenarios for scalable ASIC design methodology improvements.</li>
+</ul>
+</div>
+
+<div class="experience-card">
+<strong>Physical Design Apprentice – Industry/Training Experience</strong>
+<ul>
+<li>Executed end-to-end physical design flows including synthesis, floorplanning, placement, CTS, routing, and optimization.</li>
+<li>Resolved setup and hold timing violations to achieve timing closure on large digital designs.</li>
+<li>Delivered clean GDSII by resolving DRC/LVS issues and automating ECO cycles using TCL and shell scripting.</li>
+<li>Gained experience in I/O planning, bump assignment, and advanced physical design methodologies.</li>
+</ul>
+</div>
+
+</div>
+</div>
   <div class="section">
     <h2>Research Interests</h2>
     <p>
@@ -181,4 +216,5 @@
 </body>
 
 </html>
+
 
