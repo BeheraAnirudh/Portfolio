@@ -122,7 +122,10 @@
 .email-box a:hover {
   text-decoration: underline;
 }
-
+/* Shadow/glow for balls */
+.ball-shadow {
+  filter: drop-shadow(0 0 8px rgba(0,0,0,0.4));
+}
 
 
 
@@ -205,8 +208,8 @@
     </a>
   </div>
 
-  <!-- Canvas for realistic bouncing balls -->
-  <canvas id="headerCanvas"></canvas>
+  <!-- Realistic Animated Balls Canvas -->
+<canvas id="ballsCanvas" style="display:block; margin: 20px auto; background: #f8fafc; border-radius:15px; width: 90%; height: 300px;"></canvas>
 </div>
 
   <!-- Canvas for bouncing balls -->
@@ -447,159 +450,177 @@ Power Systems
 
 
 
+
+
+
+
+  
 <script>
-const canvas = document.getElementById("headerCanvas");
-const ctx = canvas.getContext("2d");
+const canvas = document.getElementById('ballsCanvas');
+const ctx = canvas.getContext('2d');
 
-// Physics parameters
-const gravity = 0; // No gravity for ping-pong style horizontal box
-const friction = 0.99; // Slow down slightly on collisions
-const balls = [];
-const numBalls = 5;
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
 
-// Resize canvas
-function resizeCanvas() {
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
-}
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-// Ball definitions: size, color, type (for graphics)
-const ballDefs = [
-  { radius: 18, color: "#FF4500", type: "football" }, // Orange fire - football
-  { radius: 12, color: "#00FF00", type: "rugby" },    // Green - rugby/egg
-  { radius: 16, color: "#00BFFF", type: "baseball" }, // Ice blue - baseball
-  { radius: 14, color: "#8B4513", type: "tennis" },   // Brown - cricket tennis ball
-  { radius: 20, color: "#1E90FF", type: "basketball" } // Blue - basketball
-];
-
-// Initialize balls with random position and velocity
-for (let i = 0; i < numBalls; i++) {
-  balls.push({
-    x: Math.random() * (canvas.width - ballDefs[i].radius * 2) + ballDefs[i].radius,
-    y: Math.random() * (canvas.height - ballDefs[i].radius * 2) + ballDefs[i].radius,
-    vx: (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1),
-    vy: (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1),
-    radius: ballDefs[i].radius,
-    color: ballDefs[i].color,
-    type: ballDefs[i].type
-  });
-}
-
-// Helper: detect collision between two balls
-function isColliding(ball1, ball2) {
-  const dx = ball1.x - ball2.x;
-  const dy = ball1.y - ball2.y;
-  const distance = Math.sqrt(dx*dx + dy*dy);
-  return distance < ball1.radius + ball2.radius;
-}
-
-// Resolve collision using simple elastic collision equations
-function resolveCollision(ball1, ball2) {
-  const dx = ball1.x - ball2.x;
-  const dy = ball1.y - ball2.y;
-  const distance = Math.sqrt(dx*dx + dy*dy);
-  if (distance === 0) return; // Prevent divide by zero
-
-  // Normal vector
-  const nx = dx / distance;
-  const ny = dy / distance;
-
-  // Relative velocity
-  const dvx = ball1.vx - ball2.vx;
-  const dvy = ball1.vy - ball2.vy;
-  const relVel = dvx * nx + dvy * ny;
-
-  // Do not resolve if velocities are separating
-  if (relVel > 0) return;
-
-  // Simple elastic collision impulse
-  const impulse = 2 * relVel / 2; // equal mass
-
-  ball1.vx -= impulse * nx;
-  ball1.vy -= impulse * ny;
-  ball2.vx += impulse * nx;
-  ball2.vy += impulse * ny;
-}
-
-// Draw realistic ball graphics
-function drawBall(ball) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.translate(ball.x, ball.y);
-
-  switch(ball.type){
-    case "football": // elongated football shape
-      ctx.rotate(Math.PI/4);
-      ctx.scale(1.2, 1);
-      ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
-      ctx.fillStyle = ball.color;
-      ctx.shadowColor = ball.color;
-      ctx.shadowBlur = 15;
-      ctx.fill();
-      break;
-    case "rugby": // green egg/rugby
-      ctx.scale(1.5,1);
-      ctx.arc(0, 0, ball.radius, 0, Math.PI * 2);
-      ctx.fillStyle = ball.color;
-      ctx.shadowColor = ball.color;
-      ctx.shadowBlur = 12;
-      ctx.fill();
-      break;
-    case "basketball":
-      ctx.arc(0,0, ball.radius, 0, Math.PI*2);
-      ctx.fillStyle = ball.color;
-      ctx.shadowColor = ball.color;
-      ctx.shadowBlur = 20;
-      ctx.fill();
-      break;
-    case "tennis":
-      ctx.arc(0,0, ball.radius, 0, Math.PI*2);
-      ctx.fillStyle = ball.color;
-      ctx.shadowColor = ball.color;
-      ctx.shadowBlur = 12;
-      ctx.fill();
-      break;
-    case "baseball":
-      ctx.arc(0,0, ball.radius, 0, Math.PI*2);
-      ctx.fillStyle = ball.color;
-      ctx.shadowColor = ball.color;
-      ctx.shadowBlur = 15;
-      ctx.fill();
-      break;
+// Ball class with realistic textures and trails
+class Ball {
+  constructor(x, y, vx, vy, radius, type) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    this.radius = radius;
+    this.type = type;
+    this.trail = [];
   }
 
-  ctx.restore();
-}
+  draw() {
+    // Add trail
+    this.trail.push({x: this.x, y: this.y});
+    if(this.trail.length > 15) this.trail.shift();
 
-// Animate all balls
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw trail
+    for(let i=0;i<this.trail.length;i++){
+      const alpha = i/this.trail.length * 0.3;
+      ctx.beginPath();
+      ctx.arc(this.trail[i].x,this.trail[i].y,this.radius*0.9,0,Math.PI*2);
+      ctx.fillStyle = this.getColor() + alpha + ")";
+      ctx.fill();
+    }
 
-  // Update positions and wall collisions
-  balls.forEach(ball => {
-    ball.x += ball.vx;
-    ball.y += ball.vy;
+    ctx.save();
+    ctx.translate(this.x, this.y);
 
-    if (ball.x + ball.radius > canvas.width) { ball.x = canvas.width - ball.radius; ball.vx *= -1; }
-    if (ball.x - ball.radius < 0) { ball.x = ball.radius; ball.vx *= -1; }
-    if (ball.y + ball.radius > canvas.height) { ball.y = canvas.height - ball.radius; ball.vy *= -1; }
-    if (ball.y - ball.radius < 0) { ball.y = ball.radius; ball.vy *= -1; }
-  });
-
-  // Check collisions between balls
-  for (let i = 0; i < balls.length; i++) {
-    for (let j = i + 1; j < balls.length; j++) {
-      if (isColliding(balls[i], balls[j])) {
-        resolveCollision(balls[i], balls[j]);
+    if(this.type==='football'){
+      ctx.rotate(Math.PI/4);
+      ctx.beginPath();
+      ctx.ellipse(0,0,this.radius*1.5,this.radius,0,0,Math.PI*2);
+      ctx.fillStyle="#FF4500";
+      ctx.shadowColor="#FF6347";
+      ctx.shadowBlur=12;
+      ctx.fill();
+      // stitches
+      ctx.strokeStyle="#fff"; ctx.lineWidth=2;
+      ctx.beginPath();
+      for(let i=-5;i<=5;i++){
+        ctx.moveTo(i*3,-this.radius*0.6); ctx.lineTo(i*3,this.radius*0.6);
       }
+      ctx.stroke();
+    }
+
+    else if(this.type==='basketball'){
+      ctx.beginPath();
+      ctx.arc(0,0,this.radius,0,Math.PI*2);
+      ctx.fillStyle="#FF8C00";
+      ctx.shadowColor="#FFB347";
+      ctx.shadowBlur=10;
+      ctx.fill();
+      ctx.strokeStyle="#000"; ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(-this.radius,0); ctx.lineTo(this.radius,0);
+      ctx.moveTo(0,-this.radius); ctx.lineTo(0,this.radius);
+      ctx.stroke();
+    }
+
+    else if(this.type==='rugby'){
+      ctx.rotate(Math.PI/4);
+      ctx.beginPath();
+      ctx.ellipse(0,0,this.radius*1.3,this.radius,0,0,Math.PI*2);
+      ctx.fillStyle="#008000"; ctx.shadowColor="#00FF00"; ctx.shadowBlur=8; ctx.fill();
+    }
+
+    else if(this.type==='tennis'){
+      ctx.beginPath();
+      ctx.arc(0,0,this.radius,0,Math.PI*2);
+      ctx.fillStyle="#A0522D"; ctx.shadowColor="#8B4513"; ctx.shadowBlur=6; ctx.fill();
+    }
+
+    else if(this.type==='baseball'){
+      ctx.beginPath();
+      ctx.arc(0,0,this.radius,0,Math.PI*2);
+      ctx.fillStyle="#B0E0E6"; ctx.shadowColor="#ADD8E6"; ctx.shadowBlur=6; ctx.fill();
+      // Red stitches
+      ctx.strokeStyle="#FF0000"; ctx.lineWidth=1.5;
+      for(let i=0;i<Math.PI*2;i+=Math.PI/10){
+        ctx.beginPath();
+        ctx.moveTo(this.radius*Math.cos(i), this.radius*Math.sin(i));
+        ctx.lineTo(this.radius*Math.cos(i+0.05), this.radius*Math.sin(i+0.05));
+        ctx.stroke();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  getColor() {
+    switch(this.type){
+      case 'football': return "rgba(255,69,0,"; // red-orange
+      case 'basketball': return "rgba(255,140,0,";
+      case 'rugby': return "rgba(0,128,0,";
+      case 'tennis': return "rgba(160,82,45,";
+      case 'baseball': return "rgba(176,224,230,";
+      default: return "rgba(0,0,0,";
     }
   }
 
-  // Draw all balls
-  balls.forEach(drawBall);
+  update(balls){
+    this.x += this.vx;
+    this.y += this.vy;
 
+    // Wall collision
+    if(this.x+this.radius>canvas.width || this.x-this.radius<0) this.vx*=-1;
+    if(this.y+this.radius>canvas.height || this.y-this.radius<0) this.vy*=-1;
+
+    // Ball collisions
+    balls.forEach(b=>{
+      if(b!==this){
+        let dx = b.x-this.x;
+        let dy = b.y-this.y;
+        let dist = Math.sqrt(dx*dx+dy*dy);
+        if(dist<this.radius+b.radius){
+          // Elastic collision
+          let angle = Math.atan2(dy,dx);
+          let speed1 = Math.sqrt(this.vx**2+this.vy**2);
+          let speed2 = Math.sqrt(b.vx**2+b.vy**2);
+          let direction1 = Math.atan2(this.vy,this.vx);
+          let direction2 = Math.atan2(b.vy,b.vx);
+
+          let vx1 = speed1*Math.cos(direction1-angle);
+          let vy1 = speed1*Math.sin(direction1-angle);
+          let vx2 = speed2*Math.cos(direction2-angle);
+          let vy2 = speed2*Math.sin(direction2-angle);
+
+          let final_vx1 = ((this.radius-b.radius)*vx1 + (2*b.radius*vx2))/(this.radius+b.radius);
+          let final_vx2 = ((b.radius-this.radius)*vx2 + (2*this.radius*vx1))/(this.radius+b.radius);
+
+          vx1 = final_vx1; vx2=final_vx2;
+
+          this.vx = Math.cos(angle)*vx1 + Math.cos(angle+Math.PI/2)*vy1;
+          this.vy = Math.sin(angle)*vx1 + Math.sin(angle+Math.PI/2)*vy1;
+          b.vx = Math.cos(angle)*vx2 + Math.cos(angle+Math.PI/2)*vy2;
+          b.vy = Math.sin(angle)*vx2 + Math.sin(angle+Math.PI/2)*vy2;
+        }
+      }
+    });
+  }
+}
+
+// Initialize balls
+const balls = [
+  new Ball(100,100,3,4,22,'football'),
+  new Ball(300,50,4,3,20,'basketball'),
+  new Ball(150,200,3.5,3,'rugby'),
+  new Ball(400,150,4,3,'tennis'),
+  new Ball(250,250,3,3.5,'baseball')
+];
+
+// Animate balls
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  balls.forEach(b=>{
+    b.update(balls);
+    b.draw();
+  });
   requestAnimationFrame(animate);
 }
 
@@ -611,12 +632,12 @@ animate();
 
 
 
-
   
 
 </body>
 
 </html>
+
 
 
 
