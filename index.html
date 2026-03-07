@@ -173,9 +173,6 @@
 </head>
 <body>
 
-<div class="header-box">
-  <h1>Anirudha Behera</h1>
-
 <div class="header-box" id="headerBox">
   <h1>Anirudha Behera</h1>
   <div class="email-box">
@@ -428,27 +425,26 @@ Power Systems
 <script>
 const canvas = document.getElementById('ballsCanvas');
 const ctx = canvas.getContext('2d');
+const box = document.querySelector('.name-email-box');
 
 function resizeCanvas() {
-  canvas.width = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+  canvas.width = box.offsetWidth;
+  canvas.height = box.offsetHeight;
 }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 class Ball {
-  constructor(x, y, vx, vy, radius, type, color) {
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
-    this.radius = radius; // for collision
-    this.drawRadius = radius; // for drawing (can adjust for oval)
+  constructor(x, y, vx, vy, radius, type, color){
+    this.x = x; this.y = y;
+    this.vx = vx; this.vy = vy;
+    this.radius = radius;
+    this.drawRadius = radius;
     this.type = type;
     this.color = color;
   }
 
-  draw() {
+   draw() {
     ctx.save();
     ctx.translate(this.x, this.y);
 
@@ -516,7 +512,6 @@ class Ball {
         ctx.stroke();
       }
     }
-
     ctx.restore();
   }
 
@@ -524,49 +519,40 @@ class Ball {
     this.x += this.vx;
     this.y += this.vy;
 
-    // wall collision
-    if(this.x+this.drawRadius > canvas.width){this.vx=Math.abs(this.vx);}
-    if(this.x-this.drawRadius <0){this.vx=-Math.abs(this.vx);}
-    if(this.y+this.drawRadius > canvas.height){this.vy=Math.abs(this.vy);}
-    if(this.y-this.drawRadius <0){this.vy=-Math.abs(this.vy);}
+    // WALL COLLISION (use box boundaries)
+    if(this.x+this.drawRadius > box.offsetWidth){ this.x = box.offsetWidth - this.drawRadius; this.vx*=-1;}
+    if(this.x-this.drawRadius < 0){ this.x = this.drawRadius; this.vx*=-1;}
+    if(this.y+this.drawRadius > box.offsetHeight){ this.y = box.offsetHeight - this.drawRadius; this.vy*=-1;}
+    if(this.y-this.drawRadius < 0){ this.y = this.drawRadius; this.vy*=-1;}
 
-    // collision with other balls
+    // BALL COLLISION (elastic)
     balls.forEach(b=>{
       if(b!==this){
         let dx = b.x - this.x;
         let dy = b.y - this.y;
-        let dist = Math.sqrt(dx*dx+dy*dy);
+        let dist = Math.sqrt(dx*dx + dy*dy);
         let minDist = this.drawRadius + b.drawRadius;
-        if(dist<minDist){
-          // normalized vector
-          let nx = dx/dist;
-          let ny = dy/dist;
-          // overlap
+        if(dist < minDist){
+          let nx = dx/dist, ny = dy/dist;
           let overlap = minDist - dist;
-          // push balls apart
-          this.x -= nx*overlap/2;
-          this.y -= ny*overlap/2;
-          b.x += nx*overlap/2;
-          b.y += ny*overlap/2;
-          // swap velocities along the normal for elastic effect
+          this.x -= nx*overlap/2; this.y -= ny*overlap/2;
+          b.x += nx*overlap/2; b.y += ny*overlap/2;
           let p = 2*(this.vx*nx + this.vy*ny - b.vx*nx - b.vy*ny)/(1+1);
-          this.vx = this.vx - p*nx;
-          this.vy = this.vy - p*ny;
-          b.vx = b.vx + p*nx;
-          b.vy = b.vy + p*ny;
+          this.vx -= p*nx; this.vy -= p*ny;
+          b.vx += p*nx; b.vy += p*ny;
         }
       }
     });
   }
 }
 
-// ball control parameters
+// CONTROL BALL PARAMETERS
 const balls = [
-  new Ball(80,50,3.5,4,25,'football','#FF4500'),   // football
-  new Ball(180,80,4,3,22,'basketball','#FF8C00'), // basketball
-  new Ball(300,60,3.2,3.5,20,'rugby','#008000'),  // rugby
-  new Ball(150,120,3.8,2.5,15,'tennis','#A0522D'),// tennis
-  new Ball(250,100,2.5,3,18,'baseball','#B0E0E6')// baseball
+  new Ball(80,50,3.5,4,25,'football','#FF4500'),
+  new Ball(180,80,4,3,22,'basketball','#FF8C00'),
+  new Ball(300,60,3.2,3.5,20,'rugby','#008000'),
+  new Ball(150,120,3.8,2.5,15,'tennis','#A0522D'),
+  new Ball(250,100,2.5,3,18,'baseball','#B0E0E6')
 ];
 
 function animate(){
@@ -581,15 +567,14 @@ function animate(){
 animate();
 </script>
 
-
-
-
+  
 
   
 
 </body>
 
 </html>
+
 
 
 
