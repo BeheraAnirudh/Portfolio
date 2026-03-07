@@ -437,65 +437,82 @@ resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
 class Ball {
-  constructor(x, y, vx, vy, radius, type) {
+  constructor(x, y, vx, vy, radius, type, color) {
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
-    this.radius = radius;
+    this.radius = radius; // for collision
+    this.drawRadius = radius; // for drawing (can adjust for oval)
     this.type = type;
-    this.trail = [];
+    this.color = color;
   }
 
   draw() {
-    this.trail.push({x: this.x, y: this.y});
-    if(this.trail.length>10) this.trail.shift();
-
-    // Draw trail
-    for(let i=0;i<this.trail.length;i++){
-      ctx.beginPath();
-      ctx.arc(this.trail[i].x,this.trail[i].y,this.radius*0.8,0,Math.PI*2);
-      ctx.fillStyle='rgba(0,0,0,'+i/this.trail.length*0.05+')';
-      ctx.fill();
-    }
-
     ctx.save();
     ctx.translate(this.x, this.y);
 
-    // Draw each ball type
-    if(this.type==='football'){
+    if(this.type === 'football') {
       ctx.rotate(Math.PI/4);
       ctx.beginPath();
-      ctx.ellipse(0,0,this.radius*1.5,this.radius,0,0,Math.PI*2);
-      ctx.fillStyle="#FF4500"; ctx.shadowColor="#FF6347"; ctx.shadowBlur=10; ctx.fill();
+      ctx.ellipse(0,0,this.drawRadius*1.5,this.drawRadius,0,0,Math.PI*2);
+      ctx.fillStyle = this.color; ctx.shadowColor="#FF6347"; ctx.shadowBlur=8;
+      ctx.fill();
       ctx.strokeStyle="#fff"; ctx.lineWidth=2;
       for(let i=-5;i<=5;i++){
-        ctx.moveTo(i*3,-this.radius*0.6); ctx.lineTo(i*3,this.radius*0.6);
-      }
-      ctx.stroke();
-    } else if(this.type==='basketball'){
-      ctx.beginPath(); ctx.arc(0,0,this.radius,0,Math.PI*2);
-      ctx.fillStyle="#FF8C00"; ctx.shadowColor="#FFA500"; ctx.shadowBlur=8; ctx.fill();
-      ctx.strokeStyle="#000"; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(-this.radius,0); ctx.lineTo(this.radius,0);
-      ctx.moveTo(0,-this.radius); ctx.lineTo(0,this.radius);
-      ctx.arc(0,0,this.radius,Math.PI/4,5*Math.PI/4);
-      ctx.stroke();
-    } else if(this.type==='rugby'){
-      ctx.rotate(Math.PI/4); ctx.beginPath();
-      ctx.ellipse(0,0,this.radius*1.3,this.radius,0,0,Math.PI*2);
-      ctx.fillStyle="#008000"; ctx.shadowColor="#00FF00"; ctx.shadowBlur=8; ctx.fill();
-    } else if(this.type==='tennis'){
-      ctx.beginPath(); ctx.arc(0,0,this.radius,0,Math.PI*2);
-      ctx.fillStyle="#A0522D"; ctx.shadowColor="#8B4513"; ctx.shadowBlur=6; ctx.fill();
-    } else if(this.type==='baseball'){
-      ctx.beginPath(); ctx.arc(0,0,this.radius,0,Math.PI*2);
-      ctx.fillStyle="#B0E0E6"; ctx.shadowColor="#ADD8E6"; ctx.shadowBlur=6; ctx.fill();
-      ctx.strokeStyle="#FF0000"; ctx.lineWidth=1.5;
-      for(let i=0;i<Math.PI*2;i+=Math.PI/10){
         ctx.beginPath();
-        ctx.moveTo(this.radius*Math.cos(i),this.radius*Math.sin(i));
-        ctx.lineTo(this.radius*Math.cos(i+0.05),this.radius*Math.sin(i+0.05));
+        ctx.moveTo(i*3,-this.drawRadius*0.6); ctx.lineTo(i*3,this.drawRadius*0.6);
+        ctx.stroke();
+      }
+    }
+
+    else if(this.type==='basketball'){
+      ctx.beginPath();
+      ctx.arc(0,0,this.drawRadius,0,Math.PI*2);
+      ctx.fillStyle=this.color; ctx.shadowColor="#FFA500"; ctx.shadowBlur=6; ctx.fill();
+      ctx.strokeStyle="#000"; ctx.lineWidth=2;
+      // typical basketball lines
+      ctx.beginPath();
+      ctx.moveTo(-this.drawRadius,0); ctx.lineTo(this.drawRadius,0);
+      ctx.moveTo(0,-this.drawRadius); ctx.lineTo(0,this.drawRadius);
+      ctx.arc(0,0,this.drawRadius,Math.PI/4,5*Math.PI/4);
+      ctx.stroke();
+    }
+
+    else if(this.type==='rugby'){
+      ctx.rotate(Math.PI/4);
+      ctx.beginPath();
+      ctx.ellipse(0,0,this.drawRadius*1.3,this.drawRadius,0,0,Math.PI*2);
+      ctx.fillStyle=this.color; ctx.shadowColor="#00FF00"; ctx.shadowBlur=6; ctx.fill();
+      // optional subtle horizontal lines
+      ctx.strokeStyle="#006400"; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(-this.drawRadius*1.3,0); ctx.lineTo(this.drawRadius*1.3,0); ctx.stroke();
+    }
+
+    else if(this.type==='tennis'){
+      ctx.beginPath();
+      ctx.arc(0,0,this.drawRadius,0,Math.PI*2);
+      ctx.fillStyle=this.color; ctx.shadowColor="#8B4513"; ctx.shadowBlur=5; ctx.fill();
+      // white curved stripes
+      ctx.strokeStyle="#fff"; ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.arc(0,0,this.drawRadius,0.25*Math.PI,1.25*Math.PI);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(0,0,this.drawRadius,-0.25*Math.PI,0.75*Math.PI);
+      ctx.stroke();
+    }
+
+    else if(this.type==='baseball'){
+      ctx.beginPath();
+      ctx.arc(0,0,this.drawRadius,0,Math.PI*2);
+      ctx.fillStyle=this.color; ctx.shadowColor="#ADD8E6"; ctx.shadowBlur=5; ctx.fill();
+      // red stitches
+      ctx.strokeStyle="#FF0000"; ctx.lineWidth=1.5;
+      for(let i=0;i<Math.PI*2;i+=Math.PI/12){
+        ctx.beginPath();
+        ctx.moveTo(this.drawRadius*Math.cos(i),this.drawRadius*Math.sin(i));
+        ctx.lineTo(this.drawRadius*Math.cos(i+0.05),this.drawRadius*Math.sin(i+0.05));
         ctx.stroke();
       }
     }
@@ -504,53 +521,60 @@ class Ball {
   }
 
   update(balls){
-    this.x += this.vx; this.y += this.vy;
+    this.x += this.vx;
+    this.y += this.vy;
 
-    // Wall collision
-    if(this.x+this.radius>canvas.width || this.x-this.radius<0) this.vx*=-1;
-    if(this.y+this.radius>canvas.height || this.y-this.radius<0) this.vy*=-1;
+    // wall collision
+    if(this.x+this.drawRadius > canvas.width){this.vx=Math.abs(this.vx);}
+    if(this.x-this.drawRadius <0){this.vx=-Math.abs(this.vx);}
+    if(this.y+this.drawRadius > canvas.height){this.vy=Math.abs(this.vy);}
+    if(this.y-this.drawRadius <0){this.vy=-Math.abs(this.vy);}
 
-    // Ball collision
+    // collision with other balls
     balls.forEach(b=>{
       if(b!==this){
-        let dx = b.x-this.x;
-        let dy = b.y-this.y;
+        let dx = b.x - this.x;
+        let dy = b.y - this.y;
         let dist = Math.sqrt(dx*dx+dy*dy);
-        if(dist<this.radius+b.radius){
-          let angle = Math.atan2(dy,dx);
-          let speed1 = Math.sqrt(this.vx**2+this.vy**2);
-          let speed2 = Math.sqrt(b.vx**2+b.vy**2);
-          let direction1 = Math.atan2(this.vy,this.vx);
-          let direction2 = Math.atan2(b.vy,b.vx);
-          let vx1 = speed1*Math.cos(direction1-angle);
-          let vy1 = speed1*Math.sin(direction1-angle);
-          let vx2 = speed2*Math.cos(direction2-angle);
-          let vy2 = speed2*Math.sin(direction2-angle);
-          let final_vx1 = ((this.radius-b.radius)*vx1+(2*b.radius*vx2))/(this.radius+b.radius);
-          let final_vx2 = ((b.radius-this.radius)*vx2+(2*this.radius*vx1))/(this.radius+b.radius);
-          vx1=final_vx1; vx2=final_vx2;
-          this.vx=Math.cos(angle)*vx1+Math.cos(angle+Math.PI/2)*vy1;
-          this.vy=Math.sin(angle)*vx1+Math.sin(angle+Math.PI/2)*vy1;
-          b.vx=Math.cos(angle)*vx2+Math.cos(angle+Math.PI/2)*vy2;
-          b.vy=Math.sin(angle)*vx2+Math.sin(angle+Math.PI/2)*vy2;
+        let minDist = this.drawRadius + b.drawRadius;
+        if(dist<minDist){
+          // normalized vector
+          let nx = dx/dist;
+          let ny = dy/dist;
+          // overlap
+          let overlap = minDist - dist;
+          // push balls apart
+          this.x -= nx*overlap/2;
+          this.y -= ny*overlap/2;
+          b.x += nx*overlap/2;
+          b.y += ny*overlap/2;
+          // swap velocities along the normal for elastic effect
+          let p = 2*(this.vx*nx + this.vy*ny - b.vx*nx - b.vy*ny)/(1+1);
+          this.vx = this.vx - p*nx;
+          this.vy = this.vy - p*ny;
+          b.vx = b.vx + p*nx;
+          b.vy = b.vy + p*ny;
         }
       }
     });
   }
 }
 
-// Five balls with adjustable radius
+// ball control parameters
 const balls = [
-  new Ball(100,50,3,4,25,'football'),
-  new Ball(200,80,4,3,22,'basketball'),
-  new Ball(300,60,3,3.5,20,'rugby'),
-  new Ball(150,120,3.5,2.5,15,'tennis'),
-  new Ball(250,100,2.5,3,18,'baseball')
+  new Ball(80,50,3.5,4,25,'football','#FF4500'),   // football
+  new Ball(180,80,4,3,22,'basketball','#FF8C00'), // basketball
+  new Ball(300,60,3.2,3.5,20,'rugby','#008000'),  // rugby
+  new Ball(150,120,3.8,2.5,15,'tennis','#A0522D'),// tennis
+  new Ball(250,100,2.5,3,18,'baseball','#B0E0E6')// baseball
 ];
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  balls.forEach(b=>{b.update(balls);b.draw();});
+  balls.forEach(b=>{
+    b.update(balls);
+    b.draw();
+  });
   requestAnimationFrame(animate);
 }
 
@@ -561,12 +585,12 @@ animate();
 
 
 
-
   
 
 </body>
 
 </html>
+
 
 
 
