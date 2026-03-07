@@ -134,60 +134,7 @@
 .education-card p{
   margin:6px 0;
 }
-    <style>
-
-.note-box {
-  position: relative;
-  padding: 20px;
-  border-radius: 12px;
-  background: #0f172a;
-  color: #e2e8f0;
-  font-size: 15px;
-  text-align: center;
-  overflow: hidden;
-}
-
-/* Neon animated border */
-.note-box::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 14px;
-  background: linear-gradient(
-    90deg,
-    #00f5ff,
-    #00ff85,
-    #7c3aed,
-    #00f5ff
-  );
-  background-size: 300% 300%;
-  animation: neonMove 4s linear infinite;
-  z-index: -1;
-}
-
-.note-box::after {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border-radius: 10px;
-  background: #0f172a;
-  z-index: -1;
-}
-
-/* Animation */
-@keyframes neonMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-</style>
+   
   </style>
 </head>
 <body>
@@ -358,7 +305,60 @@ Power Systems
       I am deeply passionate about Physical Design and ASIC methodology. My research interests focus on improving RTL-to-GDSII flows, floorplanning, power planning, timing closure, and optimization using automated scripting (TCL) and advanced design methodologies. I am keen to explore how Machine Learning techniques can transform physical design flows, enhancing runtime, QoR, and scalability across advanced technology nodes. I am highly motivated to contribute to the VLSI field, constantly learning and experimenting to push the boundaries of ASIC design. My goal is to pursue a PhD at an esteemed university to research and develop next-generation physical design solutions that improve efficiency and performance multifold.
     </p>
   </div>
+ <style>
 
+.note-box {
+  position: relative;
+  padding: 20px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 15px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Neon animated border */
+.note-box::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 14px;
+  background: linear-gradient(
+    90deg,
+    #00f5ff,
+    #00ff85,
+    #7c3aed,
+    #00f5ff
+  );
+  background-size: 300% 300%;
+  animation: neonMove 4s linear infinite;
+  z-index: -1;
+}
+
+.note-box::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 10px;
+  background: #0f172a;
+  z-index: -1;
+}
+
+/* Animation */
+@keyframes neonMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+</style>
 <div class="section">
   <div class="note-box">
     <p>
