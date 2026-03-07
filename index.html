@@ -141,6 +141,16 @@
   border-left:5px solid #004080;
   box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
+    .content-box {
+  background: #f8fafc;                 /* light background */
+  padding: 25px 30px;                  /* internal spacing */
+  border-radius: 12px;                 /* rounded corners */
+  border-left: 6px solid #2563eb;      /* blue accent bar like others */
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08); /* subtle shadow for depth */
+  max-width: 100%;                      /* full width in container */
+  box-sizing: border-box;               /* include padding in width */
+  line-height: 1.6;
+}
   </style>
 </head>
 <body>
@@ -308,7 +318,7 @@ Power Systems
 <div class="section">
   <h2>Research Interests</h2>
 
-  <div class="research-box">
+  <div class="content-box">
     <p>
       I am deeply passionate about Physical Design, ASIC methodology, and FPGA-based system design. My research interests focus on improving RTL-to-GDSII flows, floorplanning, power planning, timing closure, and optimization using automated scripting (TCL) and advanced design methodologies. I have hands-on experience with FPGA-SoC platforms such as ZedBoard-Zynq, where I implemented real-time audio processing systems using FIR filters, FFT, LMS adaptive noise cancellation, and multi-band parametric equalization. This work sparked my interest in hybrid ARM–FPGA hardware-software co-design pipelines and deterministic low-latency processing. I am also keen to explore how Machine Learning techniques can transform physical design flows, enhancing runtime, QoR, and scalability across advanced technology nodes. I am highly motivated to contribute to the VLSI field, constantly learning and experimenting to push the boundaries of ASIC and FPGA design. My goal is to pursue a PhD at an esteemed university to research and develop next-generation physical design solutions that improve efficiency and performance multifold.
     </p>
@@ -390,6 +400,7 @@ Power Systems
 </body>
 
 </html>
+
 
 
 
