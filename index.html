@@ -84,7 +84,7 @@
   padding: 25px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  overflow: hidden; /* IMPORTANT: keeps balls inside the box */
+  overflow: hidden; /* important to keep balls inside */
 }
 
 #ballsCanvas {
@@ -93,10 +93,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0; /* behind the text */
+  z-index: 0; /* behind text */
 }
 
-.header-box h1, .email-box {
+.header-box h1,
+.email-box {
   position: relative;
   z-index: 1; /* above canvas */
 }
@@ -174,9 +175,7 @@
 <div class="header-box" id="headerBox">
   <h1>Anirudha Behera</h1>
   <div class="email-box">
-    📧 <a href="mailto:anirudhabehera.chiku@gmail.com">
-    anirudhabehera.chiku@gmail.com
-    </a>
+    📧 <a href="mailto:anirudhabehera.chiku@gmail.com">anirudhabehera.chiku@gmail.com</a>
   </div>
   <canvas id="ballsCanvas"></canvas>
 </div>
@@ -425,6 +424,7 @@ const canvas = document.getElementById('ballsCanvas');
 const ctx = canvas.getContext('2d');
 const box = document.getElementById('headerBox');
 
+// Resize canvas to match headerBox
 function resizeCanvas() {
   canvas.width = box.clientWidth;
   canvas.height = box.clientHeight;
@@ -432,11 +432,13 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// Ball class (from previous code)
+// Ball class
 class Ball {
   constructor(x, y, vx, vy, radius, type, color, stripeColor='#fff', lineWidth=2, shapeRatio=1){
-    this.x = x; this.y = y;
-    this.vx = vx; this.vy = vy;
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
     this.radius = radius;
     this.type = type;
     this.color = color;
@@ -445,7 +447,7 @@ class Ball {
     this.shapeRatio = shapeRatio;
   }
 
-   draw(){
+  draw() {
     ctx.save();
     ctx.translate(this.x, this.y);
 
@@ -454,8 +456,10 @@ class Ball {
       ctx.beginPath();
       ctx.ellipse(0,0,this.radius*this.shapeRatio,this.radius,0,0,Math.PI*2);
       ctx.fillStyle = this.color;
-      ctx.shadowColor="#555"; ctx.shadowBlur=6;
+      ctx.shadowColor="#555";
+      ctx.shadowBlur=6;
       ctx.fill();
+
       // stitches/lines
       ctx.strokeStyle = this.stripeColor;
       ctx.lineWidth = this.lineWidth;
@@ -510,19 +514,18 @@ class Ball {
     }
     ctx.restore();
   }
-}
 
   update(balls){
     this.x += this.vx;
     this.y += this.vy;
 
     // WALL COLLISION
-    if(this.x + this.radius > box.clientWidth){ this.x = box.clientWidth - this.radius; this.vx*=-1;}
+    if(this.x + this.radius > canvas.width){ this.x = canvas.width - this.radius; this.vx*=-1;}
     if(this.x - this.radius < 0){ this.x = this.radius; this.vx*=-1;}
-    if(this.y + this.radius > box.clientHeight){ this.y = box.clientHeight - this.radius; this.vy*=-1;}
+    if(this.y + this.radius > canvas.height){ this.y = canvas.height - this.radius; this.vy*=-1;}
     if(this.y - this.radius < 0){ this.y = this.radius; this.vy*=-1;}
 
-    // BALL COLLISION (simple elastic)
+    // BALL COLLISION (elastic)
     balls.forEach(b=>{
       if(b!==this){
         let dx = b.x - this.x;
@@ -535,7 +538,7 @@ class Ball {
           this.x -= nx*overlap/2; this.y -= ny*overlap/2;
           b.x += nx*overlap/2; b.y += ny*overlap/2;
 
-          // elastic velocity exchange
+          // simple elastic velocity exchange
           let kx = this.vx - b.vx;
           let ky = this.vy - b.vy;
           let dot = kx*nx + ky*ny;
@@ -547,7 +550,7 @@ class Ball {
   }
 }
 
-// Balls configuration - FULL CONTROL
+// BALLS CONFIGURATION — fully controllable
 const ballsConfig = [
   {type:'football', radius:25, color:'#FF4500', stripeColor:'#fff', lineWidth:2, shapeRatio:1.5, vx:3.5, vy:4},
   {type:'basketball', radius:22, color:'#FF8C00', stripeColor:'#000', lineWidth:2, shapeRatio:1, vx:4, vy:3},
@@ -558,8 +561,8 @@ const ballsConfig = [
 
 // Create balls from config
 const balls = ballsConfig.map(cfg => new Ball(
-  Math.random()*(box.clientWidth-2*cfg.radius)+cfg.radius,
-  Math.random()*(box.clientHeight-2*cfg.radius)+cfg.radius,
+  Math.random()*(canvas.width-2*cfg.radius)+cfg.radius,
+  Math.random()*(canvas.height-2*cfg.radius)+cfg.radius,
   cfg.vx, cfg.vy,
   cfg.radius,
   cfg.type,
@@ -569,7 +572,7 @@ const balls = ballsConfig.map(cfg => new Ball(
   cfg.shapeRatio
 ));
 
-// Animate function
+// Animate balls
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   balls.forEach(b=>{
@@ -593,6 +596,7 @@ animate();
 </body>
 
 </html>
+
 
 
 
