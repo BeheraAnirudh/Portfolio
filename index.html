@@ -72,7 +72,13 @@
 .experience-card li{
   margin-bottom:6px;
 }
-  .header-box {
+
+
+
+
+
+
+.header-box {
   position: relative;
   text-align: center;
   background: white;
@@ -83,80 +89,22 @@
   overflow: hidden;
 }
 
-/* Asteroid head */
-.header-box::before {
-  content: "";
+/* Make canvas cover the entire header-box */
+#headerCanvas {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ff4500 0%, #ff8c00 40%, rgba(255,140,0,0) 60%);
-  box-shadow: 0 0 10px #ff4500, 0 0 20px #ff8c00, 0 0 30px #ff6347;
-  animation: asteroidMove 8s ease-in-out infinite;
-  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* so you can still click links */
+  border-radius: 10px;
 }
 
-/* Asteroid tail */
-.header-box::after {
-  content: "";
-  position: absolute;
-  width: 80px;
-  height: 20px;
-  border-radius: 50%;
-  background: linear-gradient(90deg, rgba(255,140,0,0) 0%, #ff4500 30%, #ff8c00 70%, rgba(0,64,128,0.3) 100%);
-  filter: blur(8px);
-  animation: asteroidMove 8s ease-in-out infinite;
-  z-index: 1;
-}
 
-/* Asteroid movement around all edges */
-@keyframes asteroidMove {
-  0% {
-    top: -10px;
-    left: -10px;
-    transform: rotate(0deg) scale(1);
-  }
-  12.5% {
-    top: -10px;
-    left: calc(100% - 10px);
-    transform: rotate(90deg) scale(1.05);
-  }
-  25% {
-    top: -10px;
-    left: calc(100% - 10px);
-    transform: rotate(90deg) scale(1);
-  }
-  37.5% {
-    top: calc(100% - 10px);
-    left: calc(100% - 10px);
-    transform: rotate(180deg) scale(1.05);
-  }
-  50% {
-    top: calc(100% - 10px);
-    left: calc(100% - 10px);
-    transform: rotate(180deg) scale(1);
-  }
-  62.5% {
-    top: calc(100% - 10px);
-    left: -10px;
-    transform: rotate(270deg) scale(1.05);
-  }
-  75% {
-    top: calc(100% - 10px);
-    left: -10px;
-    transform: rotate(270deg) scale(1);
-  }
-  87.5% {
-    top: -10px;
-    left: -10px;
-    transform: rotate(360deg) scale(1.05);
-  }
-  100% {
-    top: -10px;
-    left: -10px;
-    transform: rotate(360deg) scale(1);
-  }
-}
+
+
+
+    
 
 .name-title{
   font-size:32px;
@@ -225,14 +173,12 @@
 </head>
 <body>
 
- <div class="header-box">
+<div class="header-box">
+  <h1>Anirudha Behera</h1>
+  <p>Email: <a href="mailto:anirudhabehera.chiku@gmail.com">anirudhabehera.chiku@gmail.com</a></p>
 
-<h1 class="name-title">Anirudha Behera</h1>
-
-<div class="email-box">
-📧 <a href="mailto:anirudhabehera.chiku@gmail.com">
-anirudhabehera.chiku@gmail.com
-</a>
+  <!-- Canvas for bouncing balls -->
+  <canvas id="headerCanvas"></canvas>
 </div>
 
 </div>
@@ -466,10 +412,64 @@ Power Systems
     </p>
   </div>
 </div>
+<script>
+const canvas = document.getElementById("headerCanvas");
+const ctx = canvas.getContext("2d");
 
+let balls = [];
+const colors = ["#FF4500", "#FFFFFF", "#00BFFF", "#555555", "#87CEFA"]; // Red, White, Ice Blue, Charcoal, Sky Blue
+const numBalls = 5;
+
+// Resize canvas to fit header box
+function resizeCanvas() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+// Create balls with random positions and velocities
+for (let i = 0; i < numBalls; i++) {
+  balls.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 4,
+    vy: (Math.random() - 0.5) * 4,
+    radius: 15 + Math.random() * 10,
+    color: colors[i],
+  });
+}
+
+// Animate balls
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  balls.forEach(ball => {
+    ball.x += ball.vx;
+    ball.y += ball.vy;
+
+    // Bounce off edges
+    if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) ball.vx *= -1;
+    if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) ball.vy *= -1;
+
+    // Draw glowing ball
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = ball.color;
+    ctx.shadowColor = ball.color;
+    ctx.shadowBlur = 20;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
 </body>
 
 </html>
+
 
 
 
