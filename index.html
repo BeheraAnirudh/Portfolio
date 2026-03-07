@@ -89,17 +89,39 @@
   overflow: hidden;
 }
 
-/* Make canvas cover the entire header-box */
+/* Canvas covers header box */
 #headerCanvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* so you can still click links */
+  pointer-events: none; /* keeps text clickable */
   border-radius: 10px;
+  z-index: 0; /* behind text */
 }
 
+/* Email Box Styling */
+.email-box {
+  display: inline-block;
+  background: #f0f4f8;
+  padding: 10px 15px;
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-weight: bold;
+  z-index: 1;
+  position: relative;
+}
+
+.email-box a {
+  color: #004080;
+  text-decoration: none;
+}
+
+.email-box a:hover {
+  text-decoration: underline;
+}
 
 
 
@@ -175,7 +197,13 @@
 
 <div class="header-box">
   <h1>Anirudha Behera</h1>
-  <p>Email: <a href="mailto:anirudhabehera.chiku@gmail.com">anirudhabehera.chiku@gmail.com</a></p>
+
+  <!-- Email Box -->
+  <div class="email-box">
+    📧 <a href="mailto:anirudhabehera.chiku@gmail.com">
+      anirudhabehera.chiku@gmail.com
+    </a>
+  </div>
 
   <!-- Canvas for bouncing balls -->
   <canvas id="headerCanvas"></canvas>
@@ -412,12 +440,16 @@ Power Systems
     </p>
   </div>
 </div>
+
+
+
 <script>
 const canvas = document.getElementById("headerCanvas");
 const ctx = canvas.getContext("2d");
 
+// Ball colors: Red (burning), Green (replaced white), Ice Blue, Charcoal, Sky Blue
+const colors = ["#FF4500", "#00FF00", "#00BFFF", "#555555", "#87CEFA"];
 let balls = [];
-const colors = ["#FF4500", "#FFFFFF", "#00BFFF", "#555555", "#87CEFA"]; // Red, White, Ice Blue, Charcoal, Sky Blue
 const numBalls = 5;
 
 // Resize canvas to fit header box
@@ -428,15 +460,15 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
-// Create balls with random positions and velocities
+// Create balls with random positions, directions, and speed
 for (let i = 0; i < numBalls; i++) {
   balls.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 4,
-    vy: (Math.random() - 0.5) * 4,
-    radius: 15 + Math.random() * 10,
-    color: colors[i],
+    vx: (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1), // speed 2-6 px/frame
+    vy: (Math.random() * 4 + 2) * (Math.random() < 0.5 ? 1 : -1),
+    radius: 8 + Math.random() * 5, // smaller size
+    color: colors[i]
   });
 }
 
@@ -448,16 +480,30 @@ function animate() {
     ball.x += ball.vx;
     ball.y += ball.vy;
 
-    // Bounce off edges
-    if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) ball.vx *= -1;
-    if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) ball.vy *= -1;
+    // Bounce realistically off walls
+    if (ball.x + ball.radius > canvas.width) {
+      ball.x = canvas.width - ball.radius;
+      ball.vx *= -1;
+    }
+    if (ball.x - ball.radius < 0) {
+      ball.x = ball.radius;
+      ball.vx *= -1;
+    }
+    if (ball.y + ball.radius > canvas.height) {
+      ball.y = canvas.height - ball.radius;
+      ball.vy *= -1;
+    }
+    if (ball.y - ball.radius < 0) {
+      ball.y = ball.radius;
+      ball.vy *= -1;
+    }
 
     // Draw glowing ball
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fillStyle = ball.color;
     ctx.shadowColor = ball.color;
-    ctx.shadowBlur = 20;
+    ctx.shadowBlur = 15; // glow intensity
     ctx.fill();
   });
 
@@ -466,9 +512,19 @@ function animate() {
 
 animate();
 </script>
+
+
+
+
+
+
+
+  
+
 </body>
 
 </html>
+
 
 
 
