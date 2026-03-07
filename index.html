@@ -72,36 +72,132 @@
 .experience-card li{
   margin-bottom:6px;
 }
+    .header-box{
+  text-align:center;
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  margin-bottom:25px;
+}
+
+.name-title{
+  font-size:32px;
+  margin-bottom:10px;
+  color:#003366;
+}
+
+.email-box{
+  display:inline-block;
+  background:#004080;
+  color:white;
+  padding:8px 16px;
+  border-radius:20px;
+  font-size:14px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+.email-box a{
+  color:white;
+  text-decoration:none;
+}
+
+.profile-card{
+  background:white;
+  padding:20px 25px;
+  border-radius:10px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+  border-left:6px solid #004080;
+}
+
+.profile-card p{
+  text-align:justify;
+}
+    .education-container{
+  margin-left:30px;
+}
+
+.education-card{
+  background:white;
+  padding:18px 22px;
+  border-radius:8px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.08);
+  border-left:6px solid #004080;
+  margin-bottom:18px;
+}
+
+.education-card strong{
+  font-size:16px;
+  color:#004080;
+}
+
+.education-card p{
+  margin:6px 0;
+}
   </style>
 </head>
 <body>
 
-  <h1>Anirudha Behera</h1>
-  <p>Email: <a href="mailto:anirudhabehera.chiku@gmail.com">anirudhabehera.chiku@gmail.com</a></p>
+ <div class="header-box">
 
-  <div class="section">
-    <h2>Profile</h2>
-    <p>
-      Passionate Physical Design Engineer with over 4 years of experience in ASIC design flows, specializing in Place and Route (PnR), Static Timing Analysis (STA), and low-power design methodologies. Skilled in RTL-to-GDSII implementation, design optimization, and PPA improvement across advanced technology nodes. Experienced in industry-standard Synopsys and Cadence toolchains, with hands-on expertise in floorplanning, power planning, timing closure, and methodology development using TCL scripting. Focused on fine-tuning design flows to minimize runtime while improving quality-of-results (QoR) and scalability.
-    </p>
-  </div>
+<h1 class="name-title">Anirudha Behera</h1>
+
+<div class="email-box">
+📧 <a href="mailto:anirudhabehera.chiku@gmail.com">
+anirudhabehera.chiku@gmail.com
+</a>
+</div>
+
+</div>
+
+
 <div class="section">
-  <h2>Education</h2>
-  <ul>
-    <li>
-      <strong>Master of Science in Electrical Engineering</strong><br>
-      Specialization: VLSI Design and Microelectronics<br>
-      Relevant Coursework: Introduction to VLSI, CAD Techniques for VLSI Design,
-      High Performance VLSI/IC Systems, Digital SoC Design,
-      Computer Organization and Design, RF Integrated Circuit Design
-    </li>
 
-    <li>
-      <strong>Bachelor of Technology in Electrical Engineering</strong><br>
-      Focus Areas: Digital Electronics, Semiconductor Devices,
-      Embedded Systems, Control Systems, Power Systems
-    </li>
-  </ul>
+<h2>Profile</h2>
+
+<div class="profile-card">
+
+<p>
+Passionate Physical Design Engineer with over 4 years of experience in ASIC design flows, specializing in Place and Route (PnR), Static Timing Analysis (STA), and low-power design methodologies. Skilled in RTL-to-GDSII implementation, design optimization, and PPA improvement across advanced technology nodes. Experienced in industry-standard Synopsys and Cadence toolchains, with hands-on expertise in floorplanning, power planning, timing closure, and methodology development using TCL scripting. Focused on fine-tuning design flows to minimize runtime while improving quality-of-results (QoR) and scalability.
+</p>
+
+</div>
+</div>
+<div class="section">
+<h2>Education</h2>
+
+<div class="education-container">
+
+<div class="education-card">
+<strong>Master of Science in Electrical Engineering</strong>
+
+<p><b>Specialization:</b> VLSI Design and Microelectronics</p>
+
+<p><b>Relevant Coursework:</b>
+Introduction to VLSI, CAD Techniques for VLSI Design,
+High Performance VLSI/IC Systems,
+Digital SoC Design,
+Computer Organization and Design,
+RF Integrated Circuit Design
+</p>
+
+</div>
+
+<div class="education-card">
+
+<strong>Bachelor of Technology in Electrical Engineering</strong>
+
+<p><b>Focus Areas:</b>
+Digital Electronics,
+Semiconductor Devices,
+Embedded Systems,
+Control Systems,
+Power Systems
+</p>
+
+</div>
+
+</div>
 </div>
   <div class="section">
   <h2>Skills</h2>
@@ -216,5 +312,6 @@
 </body>
 
 </html>
+
 
 
