@@ -80,18 +80,20 @@
 #headerBox {
   position: relative;
   text-align: center;
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
-  overflow: hidden; /* important to contain balls */
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  overflow: hidden; /* IMPORTANT: keeps balls inside the box */
 }
 
 #ballsCanvas {
   position: absolute;
-  top:0;
-  left:0;
-  z-index: 0; /* behind text */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* behind the text */
 }
 
 .header-box h1, .email-box {
@@ -430,44 +432,54 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-// Ball class
+// Ball class (from previous code)
 class Ball {
-  constructor(x, y, vx, vy, radius, type, color){
+  constructor(x, y, vx, vy, radius, type, color, stripeColor='#fff', lineWidth=2, shapeRatio=1){
     this.x = x; this.y = y;
     this.vx = vx; this.vy = vy;
     this.radius = radius;
     this.type = type;
     this.color = color;
+    this.stripeColor = stripeColor;
+    this.lineWidth = lineWidth;
+    this.shapeRatio = shapeRatio;
   }
 
-  draw(){
+   draw(){
     ctx.save();
     ctx.translate(this.x, this.y);
 
-    // FOOTBALL (oval with stitches)
-    if(this.type === 'football'){
+    if(this.type==='football' || this.type==='rugby'){
       ctx.rotate(Math.PI/4);
       ctx.beginPath();
-      ctx.ellipse(0,0,this.radius*1.5,this.radius,0,0,Math.PI*2);
+      ctx.ellipse(0,0,this.radius*this.shapeRatio,this.radius,0,0,Math.PI*2);
       ctx.fillStyle = this.color;
-      ctx.shadowColor="#FF6347";
-      ctx.shadowBlur=8;
+      ctx.shadowColor="#555"; ctx.shadowBlur=6;
       ctx.fill();
-      ctx.strokeStyle="#fff"; ctx.lineWidth=2;
-      for(let i=-5;i<=5;i++){
+      // stitches/lines
+      ctx.strokeStyle = this.stripeColor;
+      ctx.lineWidth = this.lineWidth;
+      if(this.type==='football'){
+        for(let i=-5;i<=5;i++){
+          ctx.beginPath();
+          ctx.moveTo(i*3,-this.radius*0.6);
+          ctx.lineTo(i*3,this.radius*0.6);
+          ctx.stroke();
+        }
+      }
+      if(this.type==='rugby'){
         ctx.beginPath();
-        ctx.moveTo(i*3,-this.radius*0.6); ctx.lineTo(i*3,this.radius*0.6);
+        ctx.moveTo(-this.radius*this.shapeRatio,0);
+        ctx.lineTo(this.radius*this.shapeRatio,0);
         ctx.stroke();
       }
     }
 
-    // BASKETBALL
-    else if(this.type === 'basketball'){
+    else if(this.type==='basketball'){
       ctx.beginPath();
       ctx.arc(0,0,this.radius,0,Math.PI*2);
-      ctx.fillStyle=this.color;
-      ctx.shadowColor="#FFA500"; ctx.shadowBlur=6; ctx.fill();
-      ctx.strokeStyle="#000"; ctx.lineWidth=2;
+      ctx.fillStyle=this.color; ctx.shadowColor="#FFA500"; ctx.shadowBlur=6; ctx.fill();
+      ctx.strokeStyle=this.stripeColor; ctx.lineWidth=this.lineWidth;
       ctx.beginPath();
       ctx.moveTo(-this.radius,0); ctx.lineTo(this.radius,0);
       ctx.moveTo(0,-this.radius); ctx.lineTo(0,this.radius);
@@ -475,31 +487,20 @@ class Ball {
       ctx.stroke();
     }
 
-    // RUGBY (pill shaped)
-    else if(this.type==='rugby'){
-      ctx.rotate(Math.PI/4);
-      ctx.beginPath();
-      ctx.ellipse(0,0,this.radius*1.3,this.radius,0,0,Math.PI*2);
-      ctx.fillStyle=this.color;
-      ctx.shadowColor="#00FF00"; ctx.shadowBlur=6; ctx.fill();
-    }
-
-    // TENNIS (small round with curved stripes)
     else if(this.type==='tennis'){
       ctx.beginPath();
       ctx.arc(0,0,this.radius,0,Math.PI*2);
       ctx.fillStyle=this.color; ctx.shadowColor="#8B4513"; ctx.shadowBlur=5; ctx.fill();
-      ctx.strokeStyle="#fff"; ctx.lineWidth=2;
+      ctx.strokeStyle=this.stripeColor; ctx.lineWidth=this.lineWidth;
       ctx.beginPath(); ctx.arc(0,0,this.radius,0.25*Math.PI,1.25*Math.PI); ctx.stroke();
       ctx.beginPath(); ctx.arc(0,0,this.radius,-0.25*Math.PI,0.75*Math.PI); ctx.stroke();
     }
 
-    // BASEBALL
     else if(this.type==='baseball'){
       ctx.beginPath();
       ctx.arc(0,0,this.radius,0,Math.PI*2);
       ctx.fillStyle=this.color; ctx.shadowColor="#ADD8E6"; ctx.shadowBlur=5; ctx.fill();
-      ctx.strokeStyle="#FF0000"; ctx.lineWidth=1.5;
+      ctx.strokeStyle=this.stripeColor; ctx.lineWidth=this.lineWidth;
       for(let i=0;i<Math.PI*2;i+=Math.PI/12){
         ctx.beginPath();
         ctx.moveTo(this.radius*Math.cos(i),this.radius*Math.sin(i));
@@ -509,6 +510,7 @@ class Ball {
     }
     ctx.restore();
   }
+}
 
   update(balls){
     this.x += this.vx;
@@ -545,15 +547,29 @@ class Ball {
   }
 }
 
-// CREATE BALLS (5 balls)
-const balls = [
-  new Ball(80,50,3.5,4,25,'football','#FF4500'),
-  new Ball(180,80,4,3,22,'basketball','#FF8C00'),
-  new Ball(300,60,3.2,3.5,20,'rugby','#008000'),
-  new Ball(150,120,3.8,2.5,15,'tennis','#A0522D'),
-  new Ball(250,100,2.5,3,18,'baseball','#B0E0E6')
+// Balls configuration - FULL CONTROL
+const ballsConfig = [
+  {type:'football', radius:25, color:'#FF4500', stripeColor:'#fff', lineWidth:2, shapeRatio:1.5, vx:3.5, vy:4},
+  {type:'basketball', radius:22, color:'#FF8C00', stripeColor:'#000', lineWidth:2, shapeRatio:1, vx:4, vy:3},
+  {type:'rugby', radius:20, color:'#008000', stripeColor:'#006400', lineWidth:1, shapeRatio:1.3, vx:3.2, vy:3.5},
+  {type:'tennis', radius:15, color:'#A0522D', stripeColor:'#fff', lineWidth:2, shapeRatio:1, vx:3.8, vy:2.5},
+  {type:'baseball', radius:18, color:'#B0E0E6', stripeColor:'#FF0000', lineWidth:1.5, shapeRatio:1, vx:2.5, vy:3}
 ];
 
+// Create balls from config
+const balls = ballsConfig.map(cfg => new Ball(
+  Math.random()*(box.clientWidth-2*cfg.radius)+cfg.radius,
+  Math.random()*(box.clientHeight-2*cfg.radius)+cfg.radius,
+  cfg.vx, cfg.vy,
+  cfg.radius,
+  cfg.type,
+  cfg.color,
+  cfg.stripeColor,
+  cfg.lineWidth,
+  cfg.shapeRatio
+));
+
+// Animate function
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   balls.forEach(b=>{
@@ -566,13 +582,18 @@ function animate(){
 animate();
 </script>
 
-  
 
+
+
+
+
+  
   
 
 </body>
 
 </html>
+
 
 
 
