@@ -31,6 +31,21 @@
     .section {
       margin-bottom: 25px;
     }
+    .skill-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.skill-box {
+  background: white;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
   </style>
 </head>
 <body>
@@ -63,24 +78,63 @@
   </ul>
 </div>
   <div class="section">
-    <h2>Skills</h2>
-    <ul>
-      <li>Programming: Perl, TCL, Bash, Python (basic), Verilog HDL, Makefile</li>
-      <li>EDA Tools: Synopsys Design Compiler, ICC2, StarRC, IC Validator, PrimeTime, Cadence Virtuoso, Encounter, Calibre, Vivado</li>
-      <li>Physical Design & FPGA: Logic Synthesis, Floorplan, Powerplanning, Placement, CTS, Routing, DRC/LVS, UPF/CPF, DFT, RC Extraction, STA, ECO, SDC constraints, FPGA design and verification</li>
-    </ul>
+  <h2>Skills</h2>
+
+  <h3>Programming</h3>
+  <div class="skill-container">
+    <div class="skill-box">Perl</div>
+    <div class="skill-box">TCL</div>
+    <div class="skill-box">Bash</div>
+    <div class="skill-box">Python (Basic)</div>
+    <div class="skill-box">Verilog HDL</div>
+    <div class="skill-box">Makefile</div>
   </div>
+
+  <h3>EDA Tools</h3>
+  <div class="skill-container">
+    <div class="skill-box">Synopsys Design Compiler</div>
+    <div class="skill-box">ICC2</div>
+    <div class="skill-box">StarRC</div>
+    <div class="skill-box">IC Validator</div>
+    <div class="skill-box">PrimeTime</div>
+    <div class="skill-box">Cadence Virtuoso</div>
+    <div class="skill-box">Encounter</div>
+    <div class="skill-box">Calibre</div>
+    <div class="skill-box">Vivado</div>
+  </div>
+
+  <h3>Physical Design & FPGA</h3>
+  <div class="skill-container">
+    <div class="skill-box">Logic Synthesis</div>
+    <div class="skill-box">Floorplanning</div>
+    <div class="skill-box">Power Planning</div>
+    <div class="skill-box">Placement</div>
+    <div class="skill-box">CTS</div>
+    <div class="skill-box">Routing</div>
+    <div class="skill-box">DRC / LVS</div>
+    <div class="skill-box">UPF / CPF</div>
+    <div class="skill-box">DFT</div>
+    <div class="skill-box">RC Extraction</div>
+    <div class="skill-box">STA</div>
+    <div class="skill-box">ECO</div>
+    <div class="skill-box">SDC Constraints</div>
+    <div class="skill-box">FPGA Design</div>
+    <div class="skill-box">FPGA Verification</div>
+  </div>
+</div>
 
   <div class="section">
     <h2>Experience</h2>
     <ul>
             <li>
         <strong>Physical Design Engineer – Industry Experience</strong>  
-        • Executed PnR for advanced AI accelerator blocks (~2M standard cells, multiple macros), achieving PPA targets across multi-corner, multi-mode analysis.  
-        • Designed multi-VDD architectures, achieved timing closure across SS/TT/FF corners.  
-        • Conducted block-level floorplanning, pin assignment, IP integration, and custom layout coordination.  
-        • Performed STA & parasitic extraction, mitigated IR-drop, crosstalk, and reliability issues.  
-        • Optimized CTS and implemented ECO flows for late-stage timing fixes.
+           <ul>
+        <li>Executed PnR for advanced AI accelerator blocks (~2M standard cells, multiple macros), achieving PPA targets across multi-corner, multi-mode analysis.<li> 
+        <li>Designed multi-VDD architectures, achieved timing closure across SS/TT/FF corners.<li>  
+        <li>Conducted block-level floorplanning, pin assignment, IP integration, and custom layout coordination.<li>  
+        <li>Performed STA & parasitic extraction, mitigated IR-drop, crosstalk, and reliability issues. <li> 
+        <li>Optimized CTS and implemented ECO flows for late-stage timing fixes.<li>
+           <ul>
       </li>
       <li>
   <strong>Research Assistant – FPGA-based Audio System Project</strong>
@@ -103,10 +157,12 @@
 </li>
       <li>
         <strong>Physical Design Apprentice – Industry/Training Experience</strong>  
-        • Executed end-to-end physical design flow (Synthesis → Floorplan → Placement → CTS → Routing → Optimization) for advanced nodes.  
-        • Resolved setup/hold violations, achieved timing closure for large designs.  
-        • Delivered clean GDSII, automated ECO cycles via TCL & Shell scripting.  
-        • Gained hands-on experience in I/O planning, bump assignment, and methodology fine-tuning.
+        <ul>
+        <li>Executed end-to-end physical design flow (Synthesis → Floorplan → Placement → CTS → Routing → Optimization) for advanced nodes.<li>  
+        <li>Resolved setup/hold violations, achieved timing closure for large designs. <li> 
+        <li>Delivered clean GDSII, automated ECO cycles via TCL & Shell scripting.  <li>
+        <li>Gained hands-on experience in I/O planning, bump assignment, and methodology fine-tuning.<li>
+         <ul>
       </li>
     </ul>
   </div>
@@ -125,3 +181,4 @@
 </body>
 
 </html>
+
